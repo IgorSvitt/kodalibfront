@@ -4,7 +4,7 @@
       <span class="info-description-block-year">{{ item.year }}</span>
     </p>
     <p class="info-description-block">
-      <span class="info-description-block-duration">{{ item.duration }}</span>
+      <span class="info-description-block-duration">{{ item.duration }} мин</span>
     </p>
     <p class="info-description-block">
       <ListItems

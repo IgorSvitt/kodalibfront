@@ -29,10 +29,9 @@ export default {
 
 .info {
   background-color: #1b132e;
-  padding-top: 75px;
+  padding: 45px 0;
   color: #efefef;
   margin: auto;
-  padding-bottom: 20px;
 }
 
 .info-container {

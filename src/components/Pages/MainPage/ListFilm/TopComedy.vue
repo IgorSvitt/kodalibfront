@@ -5,7 +5,6 @@
     </div>
     <div class="list-films">
       <carousel-film :films="filmPoster"/>
-
     </div>
   </div>
 </template>

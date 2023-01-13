@@ -1,6 +1,7 @@
 <template>
   <div class="create-method">
     <div class="title-method">Create film</div>
+    {{film}}
     <item-create :itemTitle="'Title'" v-model="film.title"/>
     <item-create :itemTitle="'Year'" v-model="film.year"/>
     <item-create :itemTitle="'Poster url'" v-model="film.poster"/>

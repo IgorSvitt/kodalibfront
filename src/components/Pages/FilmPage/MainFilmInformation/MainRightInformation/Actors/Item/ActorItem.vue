@@ -94,7 +94,7 @@ export default {
 }
 
 a{
-  color: #ffddcc;
+  color: #4e3883;
 }
 
 a:hover{

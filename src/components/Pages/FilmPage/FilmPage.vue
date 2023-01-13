@@ -1,6 +1,6 @@
 <template>
-  <video-player :link="information"/>
   <all-information :information="information"/>
+  <video-player :link="information"/>
   <main-information />
 </template>
 

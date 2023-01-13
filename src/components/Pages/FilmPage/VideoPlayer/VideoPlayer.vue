@@ -1,9 +1,9 @@
 <template>
-  <div class="test-bg"></div>
+  <div class="test-bg">
     <div class="container page-video">
       <div class="video-player">
         <div class="text-video-player">
-          Смотреть {{link.title}}
+          Смотреть «{{link.title}}»
         </div>
         <iframe :src="link.linkVideo" width="100%" height="500"
                 frameborder="0" allowfullscreen allow="autoplay *; fullscreen *"></iframe>
@@ -17,6 +17,7 @@
         <actors-information/>
       </div>
     </div>
+  </div>
 <!--  <hr>-->
 </template>
 
@@ -36,11 +37,12 @@ export default {
 
 <style scoped>
 .video-player {
+  padding-left: 20px;
   width: 75%;
 }
 
 .text-video-player{
-  color: rgba(255,255,255, 0.8);
+  color: #4e3883;
   font-size: 40px;
   font-weight: 700;
   margin-bottom: 20px ;
@@ -48,10 +50,8 @@ export default {
   line-height: 50px;
 }
 
-hr{
-  display: block;
-  border-top: 1px solid rgba(255,255,255, 1);
-}
+
+
 
 .telegram{
   margin-top: 10px;
@@ -75,9 +75,14 @@ hr{
 }
 
 
+.test-bg{
+  background-color: #efefef;
+}
+
 .container.page-video{
-  padding: 45px 0;
+  padding-top: 45px;
   display: flex;
+  background-color: #ffffff;
 }
 
 .actors{

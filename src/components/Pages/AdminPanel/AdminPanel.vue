@@ -1,8 +1,7 @@
 <template>
+  <input type="text" v-model="url">
+  <button @click="getFilms">Get</button>
   <div class="container panels">
-<!--        <input type="text" v-model="url">-->
-<!--        <button @click="getFilms">Get</button>-->
-<!--        <button @click="createOfFilm">Create</button>-->
     <left-panel/>
     <right-panel/>
   </div>
@@ -20,42 +19,129 @@ export default {
     const url = ref("");
 
     const films = ref([]);
-
-    const listOfId = ref([]);
-
-    // https://imdb-api.com/API/AdvancedSearch/k_sprfn59o?title_type=movie&country_of_origin=kr&release_date=2019-01-01,2019-02-01&count=250
+    const dataFilm = ref([])
 
     function getFilms() {
       axios.get(url.value).then((responce) => {
         films.value = responce.data.results;
-        getidOfFilm();
+        getFilm()
       });
     }
 
-    function getidOfFilm() {
-      console.log(films.value.length);
+    function getFilm() {
       for (let i = 0; i < films.value.length; i++) {
-        const film = films.value;
-        listOfId.value.push(film[i].id);
-      }
-      console.log(listOfId.value)
-    }
+        const film = ref({
+          kinopoiskId: "",
+          title: "",
+          plot: "",
+          year: "",
+          duration: "",
+          countries: [],
+          genres: [],
+          budget: "",
+          grossWorldwide: "",
+          director: [],
+          writer: [],
+          topActors: [],
+          poster: "",
+          ratingKinopoisk: "",
+          thumbnailUrl: "",
+          youtubeTrailer: "",
+          linkVideo: "",
+          actors: []
+        })
+        film.value.kinopoiskId = films.value[i].kinopoisk_id
+        film.value.title = films.value[i].title
+        film.value.plot = films.value[i].material_data.description
+        film.value.year = films.value[i].year
+        film.value.duration = films.value[i].material_data.duration
+        for (let j = 0; j < films.value[i].material_data.countries.length; j++) {
+          film.value.countries.push({"name": films.value[i].material_data.countries[j]})
+        }
+        film.value.poster = films.value[i].material_data.poster_url
+        film.value.ratingKinopoisk = films.value[i].material_data.kinopoisk_rating
+        film.value.linkVideo = films.value[i].link
+        film.value.thumbnailUrl = films.value[i].screenshots[0]
+        axios.get(`https://api.kinopoisk.dev/movie?token=BN3C1H2-7NNMFSY-HXKY1HJ-EQ1XVZP&search=${film.value.kinopoiskId}&field=id`)
+            .then(responce => {
 
-    function createOfFilm() {
-      const config = {
-        method: "post",
-        url: "https://localhost:7248/api/Films/createNewFilmWithApi",
-        data: listOfId.value,
-      };
-      axios(config);
+              for (let j = 0; j < responce.data.genres.length; j++) {
+                film.value.genres.push({"name": responce.data.genres[j].name})
+              }
+
+              for (let j = 0; j < responce.data.videos.trailers.length; j++) {
+                if (responce.data.videos.trailers[j].site === "youtube") {
+                  film.value.youtubeTrailer = responce.data.videos.trailers[j].url
+                }
+              }
+              const actors = ref([])
+              const writer = ref([])
+              const director = ref([])
+              for (let j = 0; j < responce.data.persons.length; j++) {
+                if (responce.data.persons[j].enProfession === "actor") {
+                  actors.value.push({
+                    name: responce.data.persons[j].name,
+                    actorKinopoiskId: String(responce.data.persons[j].id)
+                  })
+                }
+
+
+                if (responce.data.persons[j].enProfession === "writer") {
+                  writer.value.push({
+                    name: responce.data.persons[j].name,
+                    writerKinopoiskId: String(responce.data.persons[j].id)
+                  })
+                }
+
+                if (responce.data.persons[j].enProfession === "director") {
+                  director.value.push({
+                    name: responce.data.persons[j].name,
+                    directorKinopoiskId: String(responce.data.persons[j].id)
+                  })
+                }
+              }
+              film.value.actors = actors.value
+              film.value.writer = writer.value
+              film.value.director = director.value
+
+              dataFilm.value.push({
+                "kinopoiskId": film.value.kinopoiskId,
+                "title": film.value.title,
+                "poster": film.value.poster,
+                "year": film.value.year,
+                "duration": String(film.value.duration),
+                "plot": film.value.plot,
+                "kinopoiskRating": String(film.value.ratingKinopoisk),
+                "budget": film.value.budget,
+                "grossWorldwide": film.value.grossWorldwide,
+                "youtubeTrailer": film.value.youtubeTrailer,
+                "thumbnailUrl": film.value.thumbnailUrl,
+                "linkVideo": film.value.linkVideo,
+                "filmsCountriesList": film.value.countries,
+                "filmsGenreList": film.value.genres,
+                "actorsList": film.value.actors,
+                "topActorsList": [],
+                "writersList": film.value.writer,
+                "directorList": film.value.director
+              })
+
+              if (dataFilm.value.length === films.value.length - 1) {
+                const config = ({
+                  method: "post",
+                  url: "https://localhost:7248/api/Films/CreateFilms",
+                  data: dataFilm.value,
+                })
+                console.log(config.data)
+                axios(config)
+              }
+            })
+      }
     }
 
     return {
       films,
       url,
       getFilms,
-      listOfId,
-      createOfFilm,
     };
   },
 };

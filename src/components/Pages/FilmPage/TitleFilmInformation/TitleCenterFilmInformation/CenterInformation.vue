@@ -21,14 +21,14 @@
           <p class="info-description-block" v-if="filmInformation.genres.length !== 0 ">
             <span class="info-description-block-genre">Жанры</span>
           </p>
-          <p class="info-description-block" v-if="filmInformation.budget !== '' ">
-            <span class="info-description-block-budget">Бюджет</span>
-          </p>
-          <p class="info-description-block" v-if="filmInformation.grossWorldwide !== '' ">
-            <span class="info-description-block-grossworldwide"
-              >Мировые сборы</span
-            >
-          </p>
+<!--          <p class="info-description-block" v-if="filmInformation.budget !== '' ">-->
+<!--            <span class="info-description-block-budget">Бюджет</span>-->
+<!--          </p>-->
+<!--          <p class="info-description-block" v-if="filmInformation.grossWorldwide !== '' ">-->
+<!--            <span class="info-description-block-grossworldwide"-->
+<!--              >Мировые сборы</span-->
+<!--            >-->
+<!--          </p>-->
           <p class="info-description-block" v-if="filmInformation.director.length !== 0 ">
             <span class="info-description-block-director">Режиссер</span>
           </p>
@@ -66,6 +66,7 @@ export default {
 .info-center {
   width: 100%;
   padding: 0 30px;
+  max-width: 640px;
 }
 
 .info-main {

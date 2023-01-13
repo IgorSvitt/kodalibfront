@@ -4,7 +4,7 @@
   </div>
   <div>
     <ul v-for="(actor, index) in actors" :key="actor.id">
-      <span v-if="index < 10">
+      <span v-if="index < 6">
         <li><actor-item  :actorInfo="actor"/></li>
       </span>
     </ul>
@@ -32,9 +32,9 @@ export default {
 
 <style scoped>
 .title-actors {
-  color: rgba(255,255,255, 0.8);
+  color: #4e3883;
   font-size: 30px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 50px;
   margin-bottom: 20px ;
 }

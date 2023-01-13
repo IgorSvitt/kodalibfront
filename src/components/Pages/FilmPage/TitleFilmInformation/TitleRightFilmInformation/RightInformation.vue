@@ -5,10 +5,10 @@
           :src="film.thumbnailUrl"
           alt=""
       />
-      <but ton class="button-trailer" type="button" @click="popupTriger.buttonTrigger = !popupTriger.buttonTrigger">
+      <button class="button-trailer" type="button" @click="popupTriger.buttonTrigger = !popupTriger.buttonTrigger">
         <img src="/src/assets/img/play.svg" alt="" class="info-trailer-mini-img"/>
         <span class="info-text-trailer"> Трейлер </span>
-      </but>
+      </button>
     </div>
     <div class="info-right-other">
       <div class="info-other">
@@ -61,7 +61,7 @@ export default {
     const popupTriger = ref({
       buttonTrigger: false
     })
-    const youtubeTrailer = computed(() =>`https://www.youtube.com/embed/${props.film.youtubeTrailer}?enablejsapi=1`)
+    const youtubeTrailer = computed(() => props.film.youtubeTrailer)
     return {
       youtubeTrailer,
       popupTriger
@@ -77,7 +77,8 @@ export default {
 
 .info-trailer-img {
   position: relative;
-  width: 315px;
+  width: 310px;
+  height: 180px;
 }
 
 .info-trailer-img:hover {
@@ -87,10 +88,12 @@ export default {
 
 .info-trailer-img img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .info-right {
-  max-width: 310px;
+  width: 310px;
 }
 
 .button-trailer {

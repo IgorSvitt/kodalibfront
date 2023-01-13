@@ -1,7 +1,6 @@
 <template>
   <div class="main-title">
     <div class="main-news">
-      HAPPY NEW YEAR
     </div>
   </div>
 </template>

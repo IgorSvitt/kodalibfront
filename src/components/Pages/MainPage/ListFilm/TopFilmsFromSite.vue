@@ -18,17 +18,17 @@ export default {
   components: {CarouselFilm},
   setup() {
 
-    const filmPoster = ref([1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
+    const filmPoster = ref([
+      11,
+      35,
+      74,
+      41,
+      86,
+      29,
+      19,
+      78,
+      4,
+      55,
     ])
 
 

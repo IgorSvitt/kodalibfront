@@ -1,6 +1,6 @@
 <template>
 <div>
-  <a :href="'/film/' + filmPoster.id"><img :src="filmPoster.poster" class="poster"></a>
+  <div><a :href="'/film/'+ filmPoster.id"><img :src="filmPoster.poster" class="poster"></a></div>
 </div>
 </template>
 
