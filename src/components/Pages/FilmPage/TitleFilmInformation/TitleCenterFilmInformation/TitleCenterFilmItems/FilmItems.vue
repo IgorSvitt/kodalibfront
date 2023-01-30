@@ -4,6 +4,12 @@
       <span class="info-description-block-year">{{ item.year }}</span>
     </p>
     <p class="info-description-block">
+      <span class="info-description-block-seasons">{{item.countSeason}}</span>
+    </p>
+    <p class="info-description-block">
+      <span class="info-description-block-episodes">{{item.countEpisodes}}</span>
+    </p>
+    <p class="info-description-block">
       <span class="info-description-block-duration">{{ item.duration }} мин</span>
     </p>
     <p class="info-description-block">
@@ -85,6 +91,7 @@ export default {
 <style scoped>
 .info-description-block {
   margin-bottom: 30px;
+  color: #ffddcc;
 }
 
 .info-description-data {

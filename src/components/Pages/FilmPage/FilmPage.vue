@@ -38,5 +38,4 @@ export default {
 
 
 <style>
-
 </style>

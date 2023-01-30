@@ -11,15 +11,13 @@
 
 <script>
 export default {
-  name: "left-information",
+  name: "TitleLeftSeriesInformation",
   props: {
     imgPoster: {
       type: String,
     },
   },
-  setup() {
-  },
-};
+}
 </script>
 
 <style scoped>

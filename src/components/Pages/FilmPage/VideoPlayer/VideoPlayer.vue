@@ -14,7 +14,7 @@
 <!--        </div>-->
       </div>
       <div class="actors">
-        <actors-information/>
+        <actors-information :actors="link.actors"/>
       </div>
     </div>
   </div>
@@ -80,7 +80,7 @@ export default {
 }
 
 .container.page-video{
-  padding-top: 45px;
+  padding: 45px  0;
   display: flex;
   background-color: #ffffff;
 }

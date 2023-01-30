@@ -1,8 +1,9 @@
 <template>
   <div class="info-right">
-    <div class="info-trailer-img" id="open_popup" v-if="film.youtubeTrailer !== ''" @click="popupTriger.buttonTrigger = !popupTriger.buttonTrigger">
+    <div class="info-trailer-img" id="open_popup" v-if="series.youtubeTrailer !== ''"
+         @click="popupTriger.buttonTrigger = !popupTriger.buttonTrigger">
       <img
-          :src="film.thumbnailUrl"
+          :src="series.thumbnailUrl"
           alt=""
       />
       <button class="button-trailer" type="button" @click="popupTriger.buttonTrigger = !popupTriger.buttonTrigger">
@@ -11,17 +12,19 @@
       </button>
     </div>
     <div class="info-right-other">
-      <div class="info-other">
-        <div class="info-rate" v-if="film.kinopoiskRating !== 'undefined'">
+      <div class="info-other" >
+        <div class="info-rate" v-if="series.kinopoiskRating !== 'undefined'">
           <span class="info-rating-text">Рейтинг КиноПоиск:</span>
-          <span class="info-rating-number" >{{
-              film.kinopoiskRating
-            }}</span>
+          <span class="info-rating-number">
+            {{
+              series.kinopoiskRating
+            }}
+          </span>
         </div>
         <div class="info-rate">
           <span class="info-rating-text">Рейтинг Kodalib:</span>
           <span class="info-rating-number">{{
-              film.ratingKoda
+              series.ratingKoda
             }}</span>
         </div>
         <a href="#" class="info-orher-ccra">
@@ -30,36 +33,36 @@
         </a>
       </div>
 
-        <div class="pop-up" id="popup" v-show="popupTriger.buttonTrigger">
-          <div class="pop-up-container" id="close_popup" @click="popupTriger.buttonTrigger = !popupTriger.buttonTrigger">
-<!--            <img-->
-<!--                src="/src/assets/img/close.svg"-->
-<!--                alt=""-->
-<!--                class="img-close-trailer"-->
-<!--                id="close_popup"-->
-<!--            />-->
-            <div class="pop-up-body">
-              <iframe
-                  id="trailer"
-                  :src="youtubeTrailer"
-                  allow="fullscreen"
-              >
-                <!-- https://www.youtube.com/embed/Jvurpf91omw?enablejsapi=1 -->
-              </iframe>
-            </div>
+      <div class="pop-up" id="popup" v-show="popupTriger.buttonTrigger">
+        <div class="pop-up-container" id="close_popup" @click="popupTriger.buttonTrigger = !popupTriger.buttonTrigger">
+          <!--            <img-->
+          <!--                src="/src/assets/img/close.svg"-->
+          <!--                alt=""-->
+          <!--                class="img-close-trailer"-->
+          <!--                id="close_popup"-->
+          <!--            />-->
+          <div class="pop-up-body">
+            <iframe
+                id="trailer"
+                :src="youtubeTrailer"
+                allow="fullscreen"
+            >
+              <!-- https://www.youtube.com/embed/Jvurpf91omw?enablejsapi=1 -->
+            </iframe>
           </div>
         </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import {computed, ref} from "vue";
-export default {
-  name: "right-information",
 
+export default {
+  name: "TitleRightSeriesInformation",
   props: {
-    film: {
+    series: {
       type: Object,
     },
   },
@@ -67,13 +70,13 @@ export default {
     const popupTriger = ref({
       buttonTrigger: false
     })
-    const youtubeTrailer = computed(() => props.film.youtubeTrailer)
+    const youtubeTrailer = computed(() => props.series.youtubeTrailer)
     return {
       youtubeTrailer,
-      popupTriger,
+      popupTriger
     }
   },
-};
+}
 </script>
 
 <style scoped>

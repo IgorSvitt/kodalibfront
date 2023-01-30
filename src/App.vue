@@ -1,12 +1,14 @@
 <template>
   <my-navbar/>
-  <router-view></router-view>
+  <router-view/>
+  <my-footer  class="footer"/>
 </template>
 
 <script>
 
+import MyFooter from "@/components/UI/Footer/MyFooter";
 export default {
-
+  components: {MyFooter}
 }
 </script>
 
@@ -30,4 +32,5 @@ body {
   max-width: 1320px;
   margin: 0 auto;
 }
+
 </style>

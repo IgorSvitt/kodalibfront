@@ -6,6 +6,7 @@ import {updateMethod} from "@/Store/AdminPanelStore/Methods/Update/updateMethod"
 import {people} from "@/Store/People/personModule"
 import {getPerson} from "@/Store/AdminPanelStore/PersonMethod/Get/personGetModule";
 import {updatePerson} from "@/Store/AdminPanelStore/PersonMethod/Update/personUpdateModule";
+import {series} from "@/Store/Series/seriesModule";
 
 export default createStore({
     modules:{
@@ -16,5 +17,6 @@ export default createStore({
         people: people,
         getPersonMethod: getPerson,
         updatePersonMethod: updatePerson,
+        series: series,
     }
 })

@@ -1,8 +1,10 @@
+import {createRouter, createWebHistory} from "vue-router";
 import Main from "@/components/Pages/MainPage/Main"
 import FilmPage from "@/components/Pages/FilmPage/FilmPage"
 import AdminPanel from "@/components/Pages/AdminPanel/AdminPanel"
-import {createRouter, createWebHistory} from "vue-router";
 import PersonPage from "@/components/Pages/PersonPage/PersonPage";
+import SeriesPage from "@/components/Pages/SeriesPage/SeriesPage";
+import EpisodeVideoPlayer from "@/components/Pages/SeriesPage/EpisodeVideoPlayer/EpisodeVideoPlayer";
 
 const routes = [
     {
@@ -21,6 +23,15 @@ const routes = [
         path: "/adminpanel",
         component: AdminPanel
     },
+    {
+        path: "/series/:id",
+        component: SeriesPage,
+    },
+    {
+        path: "/series/:id/season/:season_id/episode/:episode_id",
+        component: EpisodeVideoPlayer,
+    },
+
 ]
 
 const router = createRouter({

@@ -3,7 +3,7 @@
     Актеры
   </div>
   <div>
-    <ul v-for="(actor, index) in actors" :key="actor.id">
+    <ul v-for="(actor, index) in actors" :key="actor.index">
       <span v-if="index < 6">
         <li><actor-item  :actorInfo="actor"/></li>
       </span>
@@ -12,20 +12,17 @@
 </template>
 
 <script>
-import {useStore} from "vuex";
-import {computed} from "vue";
 import ActorItem from "@/components/Pages/FilmPage/MainFilmInformation/MainRightInformation/Actors/Item/ActorItem";
 
 export default {
   name: "ActorsInformation",
   components: {ActorItem},
-  setup() {
-    const store = useStore()
-
-    const actors = computed(() => store.state.films.film.actors)
-    return {
-      actors
+  props:{
+    actors:{
+      type: Object
     }
+  },
+  setup() {
   }
 }
 </script>

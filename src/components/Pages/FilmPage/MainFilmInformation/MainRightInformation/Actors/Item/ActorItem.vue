@@ -7,9 +7,6 @@
       <div class="actor-name">
        <a :href="'/person/'+actorInfo.id">{{ actorInfo.name }}</a>
       </div>
-      <div class="actor-role">
-        {{ actorInfo.role }}
-      </div>
     </div>
   </div>
 </template>
@@ -78,19 +75,14 @@ export default {
 
 .actor-block-text {
   padding-left: 10px;
-  display: block;
+  display: flex;
   max-width: 225px;
+  align-items: center;
 }
 
 .actor-name {
   color: #000;
   font-size: 20px;
-}
-
-.actor-role {
-  padding-top: 2px;
-  color: rgba(0, 0, 0, 0.3);
-  font-size: 16px;
 }
 
 a{

@@ -1,6 +1,6 @@
 <template>
   <span>
-    <a :href="'/person/' + idPerson" class="info-description-block-a">{{ link }}</a>
+    <span class="info-description-block-a">{{ link }}</span>
     <span v-if="currentItem+1 !== listLenght">,&nbsp;</span>
   </span>
 </template>
@@ -32,9 +32,5 @@ export default {
 <style scoped>
 .info-description-block-a {
   color: #ffddcc;
-}
-
-.info-description-block-a:hover {
-  color: #fed534;
 }
 </style>

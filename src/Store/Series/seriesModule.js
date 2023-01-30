@@ -1,11 +1,11 @@
 import axios from "axios";
 import {ref} from "vue";
 
-export const films = {
+export const series = {
     namespaced: true,
 
     state: () => ({
-        film: {
+        serial: {
             id: "",
             title: "",
             plot: "",
@@ -13,8 +13,6 @@ export const films = {
             duration: "",
             countries: [],
             genres: [],
-            budget: "",
-            grossWorldwide: "",
             director: [],
             writer: [],
             topActors: [],
@@ -23,8 +21,10 @@ export const films = {
             kinopoiskRating: "",
             thumbnailUrl: "",
             youtubeTrailer: "",
-            linkVideo: "",
-            actors: []
+            actors: [],
+            seasons:[],
+            countSeason: "",
+            countEpisodes: "",
         }
     }),
 
@@ -32,27 +32,23 @@ export const films = {
 
     mutations: {
         setId(state, id) {
-            state.film.id = id
-        },
-
-        setLinkVideo(state, link) {
-            state.film.linkVideo = link
+            state.serial.id = id
         },
 
         setTitle(state, title) {
-            state.film.title = title
+            state.serial.title = title
         },
 
         setPlot(state, plot) {
-            state.film.plot = plot
+            state.serial.plot = plot
         },
 
         setDuration(state, duration) {
-            state.film.duration = duration
+            state.serial.duration = duration
         },
 
         setYear(state, year) {
-            state.film.year = year
+            state.serial.year = year
         },
 
         setGenres(state, genres) {
@@ -60,11 +56,11 @@ export const films = {
             for (let i = 0; i < genres.length; i++) {
                 genre.value.push(genres[i].name)
             }
-            state.film.genres = genre
+            state.serial.genres = genre
         },
 
         setBudget(state, budget) {
-            state.film.budget = budget
+            state.serial.budget = budget
         },
 
         setCountries(state, countries) {
@@ -72,60 +68,70 @@ export const films = {
             for (let i = 0; i < countries.length; i++) {
                 country.value.push(countries[i].name)
             }
-            state.film.countries = country
+            state.serial.countries = country
         },
 
         setDirector(state, directors) {
-            state.film.director = directors
+            state.serial.director = directors
         },
 
         setWriter(state, writers) {
-            state.film.writer = writers
+            state.serial.writer = writers
         },
 
         setTopActors(state, topActors) {
-            state.film.topActors = topActors
+            state.serial.topActors = topActors
         },
 
         setPoster(state, poster) {
-            state.film.poster = poster
+            state.serial.poster = poster
         },
 
         setRatingKoda(state, ratingKoda) {
-            state.film.ratingKoda = ratingKoda
+            state.serial.ratingKoda = ratingKoda
         },
         setKinopoiskRating(state, kinopoiskRating) {
-            state.film.kinopoiskRating = kinopoiskRating
+            state.serial.kinopoiskRating = kinopoiskRating
         },
 
         setThumbnailUrl(state, thumbnailUrl) {
-            state.film.thumbnailUrl = thumbnailUrl
+            state.serial.thumbnailUrl = thumbnailUrl
         },
 
         setYoutubeTrailer(state, youtubeTrailer) {
-            state.film.youtubeTrailer = youtubeTrailer
+            state.serial.youtubeTrailer = youtubeTrailer
         },
 
         setGrossWorldwide(state, grossWorldwide) {
-            state.film.grossWorldwide = grossWorldwide
+            state.serial.grossWorldwide = grossWorldwide
         },
 
         setActors(state, actors) {
-            state.film.actors = actors
+            state.serial.actors = actors
+        },
+
+        setSeason(state, season) {
+            state.serial.seasons = season
+        },
+        setCountSeason(state, countSeason) {
+            state.serial.countSeason = countSeason
+        },
+        setCountEpisodes(state, countEpisodes) {
+            state.serial.countEpisodes = countEpisodes
         },
     },
 
     actions: {
-        getFilmApi({commit}, id) {
-            axios.get("https://localhost:7248/api/Films/GetFilm/" + id)
+        getSerialApi({commit}, id) {
+            axios.get("https://localhost:7248/api/Serial/GetOneSeries/" + id)
                 .then(responce => {
                     commit("setId", responce.data.id)
                     commit("setTitle", responce.data.title)
                     commit("setPlot", responce.data.plot)
                     commit("setYear", responce.data.year)
                     commit("setDuration", responce.data.duration)
-                    commit("setCountries", responce.data.filmsCountriesList)
-                    commit("setGenres", responce.data.filmsGenreList)
+                    commit("setCountries", responce.data.seriesCountriesList)
+                    commit("setGenres", responce.data.seriesGenreList)
                     commit("setBudget", responce.data.budget)
                     commit("setGrossWorldwide", responce.data.grossWorldwide)
                     commit("setDirector", responce.data.directorList)
@@ -137,7 +143,9 @@ export const films = {
                     commit("setThumbnailUrl", responce.data.thumbnailUrl)
                     commit("setYoutubeTrailer", responce.data.youtubeTrailer)
                     commit("setActors", responce.data.actorsList)
-                    commit("setLinkVideo", responce.data.linkVideo)
+                    commit("setSeason", responce.data.seasonViewModels)
+                    commit("setCountSeason", responce.data.countSeasons)
+                    commit("setCountEpisodes", responce.data.countEpisodes)
                 })
                 .catch(error => {
                     console.log(error.response.status)

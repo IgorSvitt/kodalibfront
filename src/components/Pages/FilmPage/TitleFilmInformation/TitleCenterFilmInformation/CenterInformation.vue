@@ -16,10 +16,10 @@
             <span class="info-description-block-duration">Продолжительность</span>
           </p>
           <p class="info-description-block" v-if="filmInformation.countries.length !== 0 ">
-            <span class="info-description-block-country">Страны</span>
+            <span class="info-description-block-country">Страна</span>
           </p>
           <p class="info-description-block" v-if="filmInformation.genres.length !== 0 ">
-            <span class="info-description-block-genre">Жанры</span>
+            <span class="info-description-block-genre">Жанр</span>
           </p>
 <!--          <p class="info-description-block" v-if="filmInformation.budget !== '' ">-->
 <!--            <span class="info-description-block-budget">Бюджет</span>-->

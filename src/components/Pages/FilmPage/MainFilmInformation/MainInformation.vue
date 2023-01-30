@@ -32,14 +32,13 @@ export default {
 .information{
   background-color: #ffffff;
   height: 100%;
-  padding-top: 50px;
 }
 
 .main-information{
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding-bottom: 70px;
+  padding-bottom: 45px;
 }
 
 .left-information{

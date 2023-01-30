@@ -1,16 +1,12 @@
 <template>
   <div class="">
-    <actors-information  />
   </div>
 </template>
 
 <script>
-import ActorsInformation
-  from "@/components/Pages/FilmPage/MainFilmInformation/MainRightInformation/Actors/ActorsInformation";
 
 export default {
   name: "RaightMainInformation",
-  components: {ActorsInformation}
 }
 </script>
 
