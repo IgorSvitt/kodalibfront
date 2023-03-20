@@ -1,41 +1,83 @@
 <template>
-  <all-information :information="information"/>
-  <video-player :link="information"/>
-  <main-information />
+  <div class="container">
+    <div v-if="!isLoading && information">
+      <div class="film-information">
+        <film-information :filmInformation="information"/>
+      </div>
+      <video-player :link="information"/>
+    </div>
+    <div v-if="isLoading" class="loader-container">
+      <div class="loader"></div>
+    </div>
+  </div>
+
 </template>
 
 
 <script>
-import AllInformation from "@/components/Pages/FilmPage/TitleFilmInformation/TitleFilmInformation.vue";
-import MainInformation from "@/components/Pages/FilmPage/MainFilmInformation/MainInformation";
 import {useStore} from "vuex";
-import {useRoute} from "vue-router";
-import {computed, onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import VideoPlayer from "@/components/Pages/FilmPage/VideoPlayer/VideoPlayer";
+import FilmInformation from "@/components/Pages/FilmPage/FilmInformation/FilmInformation";
+import {useRoute} from "vue-router";
 
 
 export default {
   components: {
+    FilmInformation,
     VideoPlayer,
-    MainInformation,
-    AllInformation,
   },
 
-  setup(){
+  setup() {
     const store = useStore()
     const route = useRoute()
-    const getFilm = () => store.dispatch("films/getFilmApi", route.params.id)
-    onMounted(getFilm)
-    const information = computed(() => store.state.films.film)
+    const isLoading = ref(true);
+    const information = ref(null)
+
+    onMounted(async () => {
+      isLoading.value = true
+      await store.dispatch("films/getFilmApi", route.params.id)
+      isLoading.value = false
+      information.value = store.state.films.film
+    })
 
     return {
       information,
+      isLoading,
     }
-  }
+  },
 
 };
 </script>
 
+<style scoped>
+.film-information {
+  margin: 45px 20px 0;
+}
 
-<style>
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 215px);
+}
+
+.loader {
+  border: 5px solid #ffddcc;
+  border-top: 5px solid #4e3883;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 </style>

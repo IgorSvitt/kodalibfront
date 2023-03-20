@@ -1,7 +1,9 @@
 <template>
   <input type="text" v-model="url">
   <button @click="getFilms">GetFilm</button>
+  <button @click="addFilms">AddFilm</button>
   <button @click="getSeries">GetSerial</button>
+  <button @click="addSeries">AddSeries</button>
   <div class="container panels">
     <left-panel/>
     <right-panel/>
@@ -21,13 +23,24 @@ export default {
 
     const series = ref([]);
     const films = ref([]);
-    const dataFilm = ref([])
 
     const dataSeries = ref([])
+    const dataFilms = ref([])
+
+    function addFilms() {
+
+      const config = ({
+        method: "post",
+        url: "https://localhost:7248/api/films/films",
+        data: dataFilms.value,
+      })
+      console.log(config)
+      axios(config)
+    }
 
     function getFilms() {
       axios.get(url.value).then((responce) => {
-        series.value = responce.data.results;
+        films.value = responce.data.results;
         getFilm()
       });
     }
@@ -37,109 +50,86 @@ export default {
         const film = ref({
           kinopoiskId: "",
           title: "",
+          poster: "",
+          year: 0,
           plot: "",
-          year: "",
           duration: "",
+          kinopoiskRating: "",
+          youtubeTrailer: "",
           countries: [],
           genres: [],
-          budget: "",
-          grossWorldwide: "",
-          director: [],
+          actors: [],
           writer: [],
-          topActors: [],
-          poster: "",
-          ratingKinopoisk: "",
-          thumbnailUrl: "",
-          youtubeTrailer: "",
-          linkVideo: "",
-          actors: []
+          director: [],
+          voiceover: [],
         })
-        film.value.kinopoiskId = films.value[i].kinopoisk_id
-        film.value.title = films.value[i].title
-        film.value.plot = films.value[i].material_data.description
-        film.value.year = films.value[i].year
-        film.value.duration = films.value[i].material_data.duration
-        for (let j = 0; j < films.value[i].material_data.countries.length; j++) {
-          film.value.countries.push({"name": films.value[i].material_data.countries[j]})
-        }
-        film.value.poster = films.value[i].material_data.poster_url
-        film.value.ratingKinopoisk = films.value[i].material_data.kinopoisk_rating
-        film.value.linkVideo = films.value[i].link
-        film.value.thumbnailUrl = films.value[i].screenshots[0]
-        axios.get(`https://api.kinopoisk.dev/movie?token=BN3C1H2-7NNMFSY-HXKY1HJ-EQ1XVZP&search=${film.value.kinopoiskId}&field=id`)
-            .then(responce => {
+        const id = ref(dataFilms.value.findIndex(x => x.title === films.value[i].title))
+        if (id.value === -1) {
+          film.value.id = films.value[i].id
+          film.value.kinopoiskId = films.value[i].kinopoisk_id
+          film.value.title = films.value[i].title
+          film.value.plot = films.value[i].material_data.description
+          film.value.year = films.value[i].year
+          film.value.duration = films.value[i].material_data.duration
+          for (let j = 0; j < films.value[i].material_data.countries.length; j++) {
+            film.value.countries.push(films.value[i].material_data.countries[j])
+          }
+          for (let j = 0; j < films.value[i].material_data.all_genres.length; j++) {
+            film.value.genres.push(films.value[i].material_data.all_genres[j])
+          }
+          film.value.poster = films.value[i].material_data.poster_url
+          film.value.kinopoiskRating = films.value[i].material_data.kinopoisk_rating
+          film.value.voiceover.push({"name": films.value[i].translation.title, "link": films.value[i].link})
 
-              for (let j = 0; j < responce.data.genres.length; j++) {
-                film.value.genres.push({"name": responce.data.genres[j].name})
-              }
-
-              for (let j = 0; j < responce.data.videos.trailers.length; j++) {
-                if (responce.data.videos.trailers[j].site === "youtube") {
-                  film.value.youtubeTrailer = responce.data.videos.trailers[j].url
+          axios.get(`https://api.kinopoisk.dev/movie?token=4R81SJ3-0JM4SZ8-QG3R6DJ-V58CDX9&search=${film.value.kinopoiskId}&field=id`)
+              .then(responce => {
+                for (let j = 0; j < responce.data.videos.trailers.length; j++) {
+                  if (responce.data.videos.trailers[j].site === "youtube") {
+                    film.value.youtubeTrailer = responce.data.videos.trailers[j].url
+                  }
                 }
-              }
-              const actors = ref([])
-              const writer = ref([])
-              const director = ref([])
-              for (let j = 0; j < responce.data.persons.length; j++) {
-                if (responce.data.persons[j].enProfession === "actor") {
-                  actors.value.push({
-                    name: responce.data.persons[j].name,
-                    actorKinopoiskId: String(responce.data.persons[j].id)
-                  })
-                }
-
-
-                if (responce.data.persons[j].enProfession === "writer") {
-                  writer.value.push({
-                    name: responce.data.persons[j].name,
-                    writerKinopoiskId: String(responce.data.persons[j].id)
-                  })
-                }
-
-                if (responce.data.persons[j].enProfession === "director") {
-                  director.value.push({
-                    name: responce.data.persons[j].name,
-                    directorKinopoiskId: String(responce.data.persons[j].id)
-                  })
-                }
-              }
-              film.value.actors = actors.value
-              film.value.writer = writer.value
-              film.value.director = director.value
-
-              dataFilm.value.push({
-                "kinopoiskId": film.value.kinopoiskId,
-                "title": film.value.title,
-                "poster": film.value.poster,
-                "year": film.value.year,
-                "duration": String(film.value.duration),
-                "plot": film.value.plot,
-                "kinopoiskRating": String(film.value.ratingKinopoisk),
-                "budget": film.value.budget,
-                "grossWorldwide": film.value.grossWorldwide,
-                "youtubeTrailer": film.value.youtubeTrailer,
-                "thumbnailUrl": film.value.thumbnailUrl,
-                "linkVideo": film.value.linkVideo,
-                "filmsCountriesList": film.value.countries,
-                "filmsGenreList": film.value.genres,
-                "actorsList": film.value.actors,
-                "topActorsList": [],
-                "writersList": film.value.writer,
-                "directorList": film.value.director
               })
 
-              if (dataFilm.value.length === films.value.length - 1) {
-                const config = ({
-                  method: "post",
-                  url: "https://localhost:7248/api/Films/CreateFilms",
-                  data: dataFilm.value,
-                })
-                console.log(config.data)
-                axios(config)
-              }
-            })
+          if (films.value[i].material_data.actors !== undefined) {
+            for (let j = 0; j < films.value[i].material_data.actors.length; j++) {
+              film.value.actors.push(films.value[i].material_data.actors[j])
+            }
+          }
+          if (films.value[i].material_data.writers !== undefined) {
+            for (let j = 0; j < films.value[i].material_data.writers.length; j++) {
+              film.value.writer.push(films.value[i].material_data.writers[j])
+            }
+          }
+          if (films.value[i].material_data.directors !== undefined) {
+            for (let j = 0; j < films.value[i].material_data.directors.length; j++) {
+              film.value.director.push(films.value[i].material_data.directors[j])
+            }
+          }
+
+          dataFilms.value.push({
+            "kinopoiskId": film.value.kinopoiskId,
+            "title": film.value.title,
+            "poster": film.value.poster,
+            "year": film.value.year,
+            "plot": film.value.plot,
+            "duration": String(film.value.duration),
+            "kinopoiskRating": String(film.value.kinopoiskRating),
+            "youtubeTrailer": film.value.youtubeTrailer,
+            "countries": film.value.countries,
+            "genres": film.value.genres,
+            "actors": film.value.actors,
+            "writer": film.value.writer,
+            "director": film.value.director,
+            "voiceover": film.value.voiceover,
+          })
+        } else {
+          dataFilms.value[id.value].voiceover.push({
+            "name": films.value[i].translation.title,
+            "link": films.value[i].link
+          })
+        }
       }
+      console.log(dataFilms.value)
     }
 
 
@@ -150,134 +140,104 @@ export default {
       });
     }
 
+    function addSeries() {
+
+      const config = ({
+        method: "post",
+        url: "https://localhost:7248/api/series/series",
+        data: dataSeries.value,
+      })
+      console.log(config)
+      axios(config)
+    }
+
     function getSerial() {
       for (let i = 0; i < series.value.length; i++) {
         const serial = ref({
           kinopoiskId: "",
+          poster: "",
           title: "",
           plot: "",
           year: "",
+          kinopoiskRating: "",
           duration: "",
           countries: [],
           genres: [],
-          budget: "",
-          grossWorldwide: "",
           director: [],
           writer: [],
-          topActors: [],
-          poster: "",
-          ratingKinopoisk: "",
-          thumbnailUrl: "",
           youtubeTrailer: "",
-          seasons: [],
+          voiceovers: [],
           actors: []
         })
-        serial.value.kinopoiskId = series.value[i].kinopoisk_id
-        serial.value.title = series.value[i].title
-        serial.value.plot = series.value[i].material_data.description
-        serial.value.year = series.value[i].year
-        serial.value.duration = series.value[i].material_data.duration
-        for (let j = 0; j < series.value[i].material_data.countries.length; j++) {
-          serial.value.countries.push({"name": series.value[i].material_data.countries[j]})
-        }
-        serial.value.poster = series.value[i].material_data.poster_url
-        serial.value.ratingKinopoisk = series.value[i].material_data.kinopoisk_rating
-        serial.value.thumbnailUrl = series.value[i].screenshots[0]
-        var countSeason = 0;
-        for (var season in series.value[i].seasons) {
-          countSeason++
-          const episodes = ref([])
-          var countEpisode = 0;
-          for (var episode in series.value[i].seasons[season].episodes) {
-            countEpisode++
-            episodes.value.push({
-              "numberEpisode": countEpisode,
-              "videoLink": series.value[i].seasons[season].episodes[episode].link,
-              "image": series.value[i].seasons[season].episodes[episode].screenshots[1]
-            })
+        const id = ref(dataSeries.value.findIndex(x => x.title === series.value[i].title))
+        if (id.value === -1) {
+          serial.value.id = series.value[i].id
+          serial.value.kinopoiskId = series.value[i].kinopoisk_id
+          serial.value.title = series.value[i].title
+          serial.value.plot = series.value[i].material_data.description
+          serial.value.year = series.value[i].year
+          serial.value.duration = series.value[i].material_data.duration
+          for (let j = 0; j < series.value[i].material_data.countries.length; j++) {
+            serial.value.countries.push(series.value[i].material_data.countries[j])
           }
-          serial.value.seasons.push({
-            "numberSeason": countSeason,
-            "episodes": episodes.value
+          for (let j = 0; j < series.value[i].material_data.all_genres.length; j++) {
+            serial.value.genres.push(series.value[i].material_data.all_genres[j])
+          }
+          serial.value.poster = series.value[i].material_data.poster_url
+          serial.value.kinopoiskRating = series.value[i].material_data.kinopoisk_rating
+          var countSeason = 0;
+          var countEpisodes = 0;
+          const seasons = ref([])
+          for (var season in series.value[i].seasons) {
+            countSeason++
+            const episodes = ref([])
+            var countEpisode = 0;
+            for (var episode in series.value[i].seasons[season].episodes) {
+              countEpisode++
+              episodes.value.push({
+                "numberEpisode": countEpisode,
+                "videoLink": series.value[i].seasons[season].episodes[episode].link,
+                "image": series.value[i].seasons[season].episodes[episode].screenshots[1]
+              })
+            }
+            seasons.value.push({
+              "numberSeason": countSeason,
+              "episodes": episodes.value
+            })
+            countEpisodes = countEpisode + countEpisodes
+          }
+          serial.value.voiceovers.push({
+            "name": series.value[i].translation.title,
+            "season": seasons.value,
+            "countEpisodes": countEpisodes,
+            "countSeason": countSeason
           })
-        }
 
-        if(serial.value.kinopoiskId != null){
-          axios.get(`https://api.kinopoisk.dev/movie?token=BN3C1H2-7NNMFSY-HXKY1HJ-EQ1XVZP&search=${serial.value.kinopoiskId}&field=id`)
+          axios.get(`https://api.kinopoisk.dev/movie?token=CJ2VRM8-T8TM034-PZZH3M8-R37HG5H&search=${serial.value.kinopoiskId}&field=id`)
               .then(responce => {
-
-                for (let j = 0; j < responce.data.genres.length; j++) {
-                  serial.value.genres.push({"name": responce.data.genres[j].name})
-                }
-
                 for (let j = 0; j < responce.data.videos.trailers.length; j++) {
                   if (responce.data.videos.trailers[j].site === "youtube") {
                     serial.value.youtubeTrailer = responce.data.videos.trailers[j].url
                   }
                 }
-                const actors = ref([])
-                const writer = ref([])
-                const director = ref([])
-                for (let j = 0; j < responce.data.persons.length; j++) {
-                  if (responce.data.persons[j].enProfession === "actor") {
-                    actors.value.push({
-                      name: responce.data.persons[j].name,
-                      actorKinopoiskId: String(responce.data.persons[j].id)
-                    })
-                  }
-
-
-                  if (responce.data.persons[j].enProfession === "writer") {
-                    writer.value.push({
-                      name: responce.data.persons[j].name,
-                      writerKinopoiskId: String(responce.data.persons[j].id)
-                    })
-                  }
-
-                  if (responce.data.persons[j].enProfession === "director") {
-                    director.value.push({
-                      name: responce.data.persons[j].name,
-                      directorKinopoiskId: String(responce.data.persons[j].id)
-                    })
-                  }
-                }
-                serial.value.actors = actors.value
-                serial.value.writer = writer.value
-                serial.value.director = director.value
-
-                dataSeries.value.push({
-                  "kinopoiskId": serial.value.kinopoiskId,
-                  "title": serial.value.title,
-                  "poster": serial.value.poster,
-                  "year": serial.value.year,
-                  "duration": String(serial.value.duration),
-                  "plot": serial.value.plot,
-                  "kinopoiskRating": String(serial.value.ratingKinopoisk),
-                  "budget": serial.value.budget,
-                  "grossWorldwide": serial.value.grossWorldwide,
-                  "youtubeTrailer": serial.value.youtubeTrailer,
-                  "thumbnailUrl": serial.value.thumbnailUrl,
-                  "filmsCountriesList": serial.value.countries,
-                  "filmsGenreList": serial.value.genres,
-                  "actorsList": serial.value.actors,
-                  "topActorsList": [],
-                  "writersList": serial.value.writer,
-                  "directorList": serial.value.director,
-                  "seasonViewModels": serial.value.seasons
-                })
-
-                if (dataSeries.value.length === series.value.length - 1) {
-                  const config = ({
-                    method: "post",
-                    url: "https://localhost:7248/api/Serial/CreateSeries",
-                    data: dataSeries.value,
-                  })
-                  console.log(config.data)
-                  axios(config)
-                }
               })
-        }
-        else{
+
+          if (series.value[i].material_data.actors !== undefined) {
+            for (let j = 0; j < series.value[i].material_data.actors.length; j++) {
+              serial.value.actors.push(series.value[i].material_data.actors[j])
+            }
+          }
+          if (series.value[i].material_data.writers !== undefined) {
+            for (let j = 0; j < series.value[i].material_data.writers.length; j++) {
+              serial.value.writer.push(series.value[i].material_data.writers[j])
+            }
+          }
+          if (series.value[i].material_data.directors !== undefined) {
+            for (let j = 0; j < series.value[i].material_data.directors.length; j++) {
+              serial.value.director.push(series.value[i].material_data.directors[j])
+            }
+          }
+
           dataSeries.value.push({
             "kinopoiskId": serial.value.kinopoiskId,
             "title": serial.value.title,
@@ -286,30 +246,45 @@ export default {
             "duration": String(serial.value.duration),
             "plot": serial.value.plot,
             "kinopoiskRating": String(serial.value.ratingKinopoisk),
-            "budget": serial.value.budget,
-            "grossWorldwide": serial.value.grossWorldwide,
             "youtubeTrailer": serial.value.youtubeTrailer,
-            "thumbnailUrl": serial.value.thumbnailUrl,
-            "filmsCountriesList": serial.value.countries,
-            "filmsGenreList": serial.value.genres,
-            "actorsList": serial.value.actors,
-            "topActorsList": [],
-            "writersList": serial.value.writer,
-            "directorList": serial.value.director,
-            "seasonViewModels": serial.value.seasons
+            "countries": serial.value.countries,
+            "genres": serial.value.genres,
+            "writers": serial.value.writer,
+            "directors": serial.value.director,
+            "actors": serial.value.actors,
+            "voiceover": serial.value.voiceovers
           })
-
-          if (dataSeries.value.length === series.value.length - 1) {
-            const config = ({
-              method: "post",
-              url: "https://localhost:7248/api/Serial/CreateSeries",
-              data: dataSeries.value,
+        } else {
+          countSeason = 0;
+          countEpisodes = 0;
+          const seasons = ref([])
+          for (season in series.value[i].seasons) {
+            countSeason++
+            const episodes = ref([])
+            countEpisode = 0;
+            for (episode in series.value[i].seasons[season].episodes) {
+              countEpisode++
+              episodes.value.push({
+                "numberEpisode": countEpisode,
+                "videoLink": series.value[i].seasons[season].episodes[episode].link,
+                "image": series.value[i].seasons[season].episodes[episode].screenshots[1]
+              })
+            }
+            seasons.value.push({
+              "numberSeason": countSeason,
+              "episodes": episodes.value
             })
-            console.log(config.data)
-            axios(config)
+            countEpisodes = countEpisode + countEpisodes
           }
+          dataSeries.value[id.value].voiceover.push({
+            "name": series.value[i].translation.title,
+            "season": seasons.value,
+            "countEpisodes": countEpisodes,
+            "countSeason": countSeason
+          })
         }
       }
+      console.log(dataSeries.value)
     }
 
     return {
@@ -317,7 +292,9 @@ export default {
       series,
       url,
       getFilms,
-      getSeries
+      getSeries,
+      addFilms,
+      addSeries
     };
   },
 };

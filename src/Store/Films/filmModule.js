@@ -13,19 +13,22 @@ export const films = {
             duration: "",
             countries: [],
             genres: [],
-            budget: "",
-            grossWorldwide: "",
-            director: [],
-            writer: [],
-            topActors: [],
+            directors: [],
+            writers: [],
             poster: "",
             ratingKoda: "",
             kinopoiskRating: "",
-            thumbnailUrl: "",
             youtubeTrailer: "",
-            linkVideo: "",
+            linkVideo: [],
             actors: []
-        }
+        },
+        films:[],
+        page: 0,
+        selectedCountry: '',
+        selectedGenre: '',
+        year: '',
+        currentPage: "",
+        totalPages: "",
     }),
 
     getters: {},
@@ -33,10 +36,6 @@ export const films = {
     mutations: {
         setId(state, id) {
             state.film.id = id
-        },
-
-        setLinkVideo(state, link) {
-            state.film.linkVideo = link
         },
 
         setTitle(state, title) {
@@ -58,14 +57,11 @@ export const films = {
         setGenres(state, genres) {
             const genre = ref([])
             for (let i = 0; i < genres.length; i++) {
-                genre.value.push(genres[i].name)
+                genre.value.push(genres[i].name.charAt(0).toUpperCase() + genres[i].name.slice(1))
             }
             state.film.genres = genre
         },
 
-        setBudget(state, budget) {
-            state.film.budget = budget
-        },
 
         setCountries(state, countries) {
             const country = ref([])
@@ -75,16 +71,12 @@ export const films = {
             state.film.countries = country
         },
 
-        setDirector(state, directors) {
+        setDirectors(state, directors) {
             state.film.director = directors
         },
 
-        setWriter(state, writers) {
+        setWriters(state, writers) {
             state.film.writer = writers
-        },
-
-        setTopActors(state, topActors) {
-            state.film.topActors = topActors
         },
 
         setPoster(state, poster) {
@@ -98,51 +90,93 @@ export const films = {
             state.film.kinopoiskRating = kinopoiskRating
         },
 
-        setThumbnailUrl(state, thumbnailUrl) {
-            state.film.thumbnailUrl = thumbnailUrl
-        },
-
         setYoutubeTrailer(state, youtubeTrailer) {
             state.film.youtubeTrailer = youtubeTrailer
         },
 
-        setGrossWorldwide(state, grossWorldwide) {
-            state.film.grossWorldwide = grossWorldwide
+        setActors(state, actors) {
+            const actor = ref([])
+            for (let i = 0; i < actors.length; i++) {
+                actor.value.push(actors[i].name)
+            }
+            state.film.actors = actor
         },
 
-        setActors(state, actors) {
-            state.film.actors = actors
+        setVoiceovers(state, voiceovers) {
+            state.film.linkVideo = voiceovers
         },
+
+        setFilms(state, films){
+            state.films.push(...films)
+        },
+
+        setPage(state, page) {
+            state.page = page;
+        },
+        setSelectedCountry(state, selectedCountry) {
+            state.selectedCountry = selectedCountry;
+        },
+        setSelectedGenre(state, selectedGenre) {
+            state.selectedGenre = selectedGenre;
+        },
+        setSelectedYear(state, year) {
+            state.year = year;
+        },
+        resetFilms(state) {
+            state.films = [];
+            state.page = 0;
+        },
+        setCurrentPage(state, page) {
+            state.currentPage = page;
+        },
+        setTotalPages(state, totalPages) {
+            state.totalPages = totalPages;
+        }
     },
 
     actions: {
-        getFilmApi({commit}, id) {
-            axios.get("https://localhost:7248/api/Films/GetFilm/" + id)
-                .then(responce => {
-                    commit("setId", responce.data.id)
-                    commit("setTitle", responce.data.title)
-                    commit("setPlot", responce.data.plot)
-                    commit("setYear", responce.data.year)
-                    commit("setDuration", responce.data.duration)
-                    commit("setCountries", responce.data.filmsCountriesList)
-                    commit("setGenres", responce.data.filmsGenreList)
-                    commit("setBudget", responce.data.budget)
-                    commit("setGrossWorldwide", responce.data.grossWorldwide)
-                    commit("setDirector", responce.data.directorList)
-                    commit("setWriter", responce.data.writersList)
-                    commit("setTopActors", responce.data.topActorsList)
-                    commit("setPoster", responce.data.poster)
-                    commit("setRatingKoda", responce.data.kodalibRating)
-                    commit("setKinopoiskRating", responce.data.kinopoiskRating)
-                    commit("setThumbnailUrl", responce.data.thumbnailUrl)
-                    commit("setYoutubeTrailer", responce.data.youtubeTrailer)
-                    commit("setActors", responce.data.actorsList)
-                    commit("setLinkVideo", responce.data.linkVideo)
+        async getFilmApi({commit}, id) {
+            await axios.get("https://localhost:7248/api/films/" + id)
+                .then(response => {
+                    console.log(response.data.data)
+                    commit("setId", response.data.data.id)
+                    commit("setTitle", response.data.data.title)
+                    commit("setPoster", response.data.data.poster)
+                    commit("setPlot", response.data.data.plot)
+                    commit("setYear", response.data.data.year)
+                    commit("setDuration", response.data.data.duration)
+                    commit("setCountries", response.data.data.countries)
+                    commit("setGenres", response.data.data.genres)
+                    commit("setDirectors", response.data.data.directors)
+                    commit("setWriters", response.data.data.writers)
+                    commit("setRatingKoda", response.data.data.kodalibRating)
+                    commit("setKinopoiskRating", response.data.data.kinopoiskRating)
+                    commit("setYoutubeTrailer", response.data.data.youtubeTrailer)
+                    commit("setActors", response.data.data.actors)
+                    commit("setVoiceovers", response.data.data.voiceovers)
                 })
-                .catch(error => {
-                    console.log(error.response.status)
-                })
-        }
+        },
+        async getFilmsApi({ commit }, { page, country, genre, year }) {
+            try {
+                let url = `https://localhost:7248/api/films?PageSize=16&PageNumber=${page}`;
+                if (country) {
+                    url += `&Country=${country}`;
+                }
+                if (genre) {
+                    url += `&Genre=${genre}`;
+                }
+                if (year) {
+                    url += `&Year=${year}`;
+                }
+                const response = await axios.get(url);
+                console.log(url)
+                commit("setCurrentPage", response.data.data.currentPage);
+                commit("setTotalPages", response.data.data.totalPages);
+                commit("setFilms", response.data.data.items);
+            } catch (error) {
+                commit("setFilms", []);
+            }
+        },
 
     }
 

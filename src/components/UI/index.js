@@ -1,5 +1,5 @@
-import MyNavbar from '@/components/UI/Navbar/MyNavbar.vue';
+import KodaNavbar from "@/components/UI/Navbar/KodaNavbar";
 
 export default[
-    MyNavbar
+    KodaNavbar
 ]

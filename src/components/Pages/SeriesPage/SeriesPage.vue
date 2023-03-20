@@ -1,21 +1,20 @@
 <template>
-<div>
-<title-series-information :seriesInfo="seriesInformation"/>
-  <series-video-player :link="seriesInformation"/>
-  <my-comment />
-</div>
+  <div class="container">
+    <div class="film-information">
+      <series-information :seriesInformation="seriesInformation"/>
+    </div>
+  </div>
 </template>
 
 <script>
-import TitleSeriesInformation from "@/components/Pages/SeriesPage/TitleSeriesInformation/TitleSeriesInformation";
 import {useRoute} from "vue-router";
 import {useStore} from "vuex";
 import {computed, onMounted} from "vue";
-import SeriesVideoPlayer from "@/components/Pages/SeriesPage/SeriesVideoPlayer/SeriesVideoPlayer";
-import MyComment from "@/components/UI/Comment/MyComment";
+import SeriesInformation from "@/components/Pages/SeriesPage/SeriesInformation/SeriesInformation";
+
 export default {
   name: "SeriesPage",
-  components: {MyComment, SeriesVideoPlayer, TitleSeriesInformation},
+  components: {SeriesInformation},
   setup(){
     const route = useRoute()
     const store = useStore()
@@ -33,5 +32,8 @@ export default {
 </script>
 
 <style scoped>
+.film-information{
+  margin: 45px 20px 0;
+}
 
 </style>

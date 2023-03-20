@@ -1,27 +1,28 @@
-import {createRouter, createWebHistory} from "vue-router";
-import Main from "@/components/Pages/MainPage/Main"
-import FilmPage from "@/components/Pages/FilmPage/FilmPage"
-import AdminPanel from "@/components/Pages/AdminPanel/AdminPanel"
+import { createRouter, createWebHistory } from "vue-router";
+import Main from "@/components/Pages/MainPage/Main";
+import FilmPage from "@/components/Pages/FilmPage/FilmPage";
+import AdminPanel from "@/components/Pages/AdminPanel/AdminPanel";
 import PersonPage from "@/components/Pages/PersonPage/PersonPage";
 import SeriesPage from "@/components/Pages/SeriesPage/SeriesPage";
 import EpisodeVideoPlayer from "@/components/Pages/SeriesPage/EpisodeVideoPlayer/EpisodeVideoPlayer";
+import FilmsPage from "@/components/Pages/FilmsPage/FilmsPage";
 
 const routes = [
     {
         path: "/",
-        component: Main
+        component: Main,
     },
     {
         path: "/film/:id",
-        component: FilmPage
+        component: FilmPage,
     },
     {
         path: "/person/:id",
-        component: PersonPage
+        component: PersonPage,
     },
     {
         path: "/adminpanel",
-        component: AdminPanel
+        component: AdminPanel,
     },
     {
         path: "/series/:id",
@@ -31,13 +32,15 @@ const routes = [
         path: "/series/:id/season/:season_id/episode/:episode_id",
         component: EpisodeVideoPlayer,
     },
-
-]
+    {
+        path: "/films",
+        component: FilmsPage,
+    },
+];
 
 const router = createRouter({
     routes,
-    history: createWebHistory(process.env.BASE_URL)
-})
+    history: createWebHistory(process.env.BASE_URL),
+});
 
 export default router;
-    

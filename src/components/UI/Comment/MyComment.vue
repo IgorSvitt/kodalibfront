@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <div class="comment-title">
-      Комментарии
-    </div>
     <div class="comment">
+      <div class="comment-title">
+        Комментарии
+      </div>
       <div class="errors" v-show="errorMessage.length !== 0">
         Пожалуйста исправьте указанные ошибки:
-        <div class="error">{{errorMessage}}</div>
+        <div class="error">{{ errorMessage }}</div>
       </div>
       <form>
         <div>
@@ -28,32 +28,42 @@
              </span>
             </div>
           </div>
-          <button type="button" class="btn-com" @click="addComment(comment)">Опубликовать</button>
+          <button type="button" class="btn-com" @click="addComment">Опубликовать</button>
         </div>
-        {{ comment }}
       </form>
       <hr>
+      <div class="comment-title">
+        Количество комметриев: {{ comments.length }}
+      </div>
       <div v-for="(com, index) in comments" :key="index" class="users-comments">
-        <div>
+        <div class="name-user-com">
           {{ com.name }}
+
         </div>
-        <div>
+        <div class="message-user-com">
           {{ com.message }}
         </div>
-        <div>
-          {{ com.rate }}
+        <div class="rate-user-com">
+          {{ com.rate }} / 10
         </div>
       </div>
     </div>
+    <rating-comment :rate="rating" />
   </div>
 </template>
 
 <script>
 import {ref} from "vue";
+import RatingComment from "@/components/UI/Comment/RatingComment";
 
 export default {
   name: "MyComment",
-
+  components: { RatingComment},
+  props: {
+    rating: {
+      type: Object
+    }
+  },
   setup() {
     const errorMessage = ref("")
     const activeRate = ref(0)
@@ -62,9 +72,21 @@ export default {
       rate: 0,
       message: ""
     })
-    const comments = ref([])
+    const comments = ref([{
+      name: "Игорь",
+      message: "Сюжет скорее всего найдет отклик у многих. Тема школьного насилия актуальна для любой страны, в той или иной степени. Снято качественно, характеры героев цепляют. Все 8 серий лично я посмотрела залпом.\n" +
+          "\n" +
+          "Только описание в последнем абзаце не совсем коректно. Не на детях, ребенок там только 1. И ту девочку она не трогает и не обижает, даже наоборот. \n" +
+          "Мстить она будет своим обидчикам, и больше всего матери девочки, которую играет Им Джи Ён. ",
+      rate: 8
+    }])
 
-    function addComment(com) {
+    function addComment() {
+      const com = {
+        name: comment.value.name,
+        rate: comment.value.rate,
+        message: comment.value.message
+      }
       if (com.name.length < 2) {
         errorMessage.value = "Имя должно быть больше 2 символов"
       } else if (com.name.length > 20) {
@@ -77,6 +99,10 @@ export default {
         errorMessage.value = "Нет оценки"
       } else {
         comments.value.push(com)
+        comment.value.name = ""
+        comment.value.rate = 0
+        comment.value.message = ""
+        errorMessage.value = ""
       }
     }
 
@@ -102,9 +128,14 @@ export default {
   box-sizing: border-box;
 }
 
+.container {
+  display: flex;
+  justify-content: space-around;
+}
+
 .comment {
   color: #ffddcc;
-  width: 60%;
+  width: 50%;
 }
 
 .comment-title {
@@ -202,18 +233,45 @@ hr {
   cursor: pointer;
 }
 
-.users-comments{
+.users-comments {
   margin: 20px 0;
 }
 
-.errors{
+.errors {
   font-size: 20px;
   margin: 20px 0;
-    color: #FEAAE3;
+  color: #FEAAE3;
 }
 
-.error{
+.error {
   margin-top: 10px;
   font-size: 24px;
 }
+
+.users-comments {
+  background: #503883;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.name-user-com {
+  font-size: 24px;
+  font-weight: 500;
+  color: #ffb996;
+  margin-bottom: 10px;
+}
+
+.message-user-com {
+  margin-bottom: 10px;
+  font-size: 18px;
+  word-break: break-all;
+}
+
+.rate-user-com {
+  font-size: 26px;
+  text-align: right;
+}
+
+
+
 </style>

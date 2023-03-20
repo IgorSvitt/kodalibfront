@@ -7,6 +7,8 @@ import {people} from "@/Store/People/personModule"
 import {getPerson} from "@/Store/AdminPanelStore/PersonMethod/Get/personGetModule";
 import {updatePerson} from "@/Store/AdminPanelStore/PersonMethod/Update/personUpdateModule";
 import {series} from "@/Store/Series/seriesModule";
+import {genres} from "@/Store/FilmsAndGenres/genreModule";
+import {country} from "@/Store/FilmsAndGenres/countryModule";
 
 export default createStore({
     modules:{
@@ -18,5 +20,8 @@ export default createStore({
         getPersonMethod: getPerson,
         updatePersonMethod: updatePerson,
         series: series,
-    }
+        genres: genres,
+        country: country
+    },
 })
+
