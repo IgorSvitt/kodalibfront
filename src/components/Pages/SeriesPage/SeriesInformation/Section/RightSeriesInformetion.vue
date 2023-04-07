@@ -16,10 +16,11 @@
 
 <script>
 export default {
-  name: "RightFilmInformation",
   props: {
     actors: {
-      type: Array
+      type: Array,
+      required: true,
+      default: () => []
     }
   }
 }

@@ -1,9 +1,9 @@
 <template>
   <div class="poster">
-    <img :src="filmMedia.poster" class="poster-img">
+    <img :src="seriesMedia.poster" class="poster-img">
   </div>
-  <div class="trailer">
-    <a :href="filmMedia.youtubeTrailer" target="_blank">
+  <div class="trailer" v-show="seriesMedia.youtubeTrailer !== ''">
+    <a :href="seriesMedia.youtubeTrailer" target="_blank">
       <button class="trailer-btn">
         <img src="@/assets/img/play.svg" class="trailer-img"/>
         Трейлер
@@ -14,9 +14,8 @@
 
 <script>
 export default {
-  name: "LeftFilmInformation",
   props: {
-    filmMedia: {
+    seriesMedia: {
       type: Object
     }
   }

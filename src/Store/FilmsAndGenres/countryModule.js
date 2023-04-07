@@ -23,7 +23,7 @@ export const country = {
 
     actions: {
         async getCountriesApi({ commit }) {
-            const response = await axios.get("https://localhost:7248/api/countries");
+            const response = await axios.get("http://5.44.46.158/api/countries");
             commit("setCountries", response.data.data);
         },
     },

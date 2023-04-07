@@ -13,19 +13,23 @@ export const series = {
             duration: "",
             countries: [],
             genres: [],
-            director: [],
-            writer: [],
-            topActors: [],
+            directors: [],
+            writers: [],
             poster: "",
             ratingKoda: "",
             kinopoiskRating: "",
-            thumbnailUrl: "",
             youtubeTrailer: "",
             actors: [],
-            seasons:[],
-            countSeason: "",
-            countEpisodes: "",
-        }
+            voiceover: [],
+        },
+        films:[],
+        page: 0,
+        selectedCountry: '',
+        selectedGenre: '',
+        year: '',
+        currentPage: "",
+        totalPages: "",
+        title: "",
     }),
 
     getters: {},
@@ -54,14 +58,11 @@ export const series = {
         setGenres(state, genres) {
             const genre = ref([])
             for (let i = 0; i < genres.length; i++) {
-                genre.value.push(genres[i].name)
+                genre.value.push(genres[i].name.charAt(0).toUpperCase() + genres[i].name.slice(1))
             }
             state.serial.genres = genre
         },
 
-        setBudget(state, budget) {
-            state.serial.budget = budget
-        },
 
         setCountries(state, countries) {
             const country = ref([])
@@ -71,16 +72,20 @@ export const series = {
             state.serial.countries = country
         },
 
-        setDirector(state, directors) {
-            state.serial.director = directors
+        setDirectors(state, directors) {
+            const person = ref([])
+            for (let i = 0; i < directors.length; i++) {
+                person.value.push(directors[i].name)
+            }
+            state.serial.director = person
         },
 
-        setWriter(state, writers) {
-            state.serial.writer = writers
-        },
-
-        setTopActors(state, topActors) {
-            state.serial.topActors = topActors
+        setWriters(state, writers) {
+            const person = ref([])
+            for (let i = 0; i < writers.length; i++) {
+                person.value.push(writers[i].name)
+            }
+            state.serial.writer = person
         },
 
         setPoster(state, poster) {
@@ -91,66 +96,105 @@ export const series = {
             state.serial.ratingKoda = ratingKoda
         },
         setKinopoiskRating(state, kinopoiskRating) {
+            if(kinopoiskRating === undefined){
+                kinopoiskRating = ""
+            }
             state.serial.kinopoiskRating = kinopoiskRating
-        },
-
-        setThumbnailUrl(state, thumbnailUrl) {
-            state.serial.thumbnailUrl = thumbnailUrl
         },
 
         setYoutubeTrailer(state, youtubeTrailer) {
             state.serial.youtubeTrailer = youtubeTrailer
         },
 
-        setGrossWorldwide(state, grossWorldwide) {
-            state.serial.grossWorldwide = grossWorldwide
-        },
-
         setActors(state, actors) {
-            state.serial.actors = actors
+            const actor = ref([])
+            for (let i = 0; i < actors.length; i++) {
+                actor.value.push(actors[i].name)
+            }
+            state.serial.actors = actor
         },
 
-        setSeason(state, season) {
-            state.serial.seasons = season
+        setVoiceover(state, voiceovers) {
+            state.serial.voiceover = voiceovers
         },
-        setCountSeason(state, countSeason) {
-            state.serial.countSeason = countSeason
+
+        setFilms(state, films){
+            state.films.push(...films)
         },
-        setCountEpisodes(state, countEpisodes) {
-            state.serial.countEpisodes = countEpisodes
+
+        setPage(state, page) {
+            state.page = page;
         },
+        setSelectedCountry(state, selectedCountry) {
+            state.selectedCountry = selectedCountry;
+        },
+        setSelectedGenre(state, selectedGenre) {
+            state.selectedGenre = selectedGenre;
+        },
+        setSelectedYear(state, year) {
+            state.year = year;
+        },
+        setSelectedTitle(state, title) {
+            state.title = title;
+        },
+        resetFilms(state) {
+            state.films = [];
+            state.page = 0;
+        },
+        setCurrentPage(state, page) {
+            state.currentPage = page;
+        },
+        setTotalPages(state, totalPages) {
+            state.totalPages = totalPages;
+        }
     },
 
     actions: {
-        getSerialApi({commit}, id) {
-            axios.get("https://localhost:7248/api/Serial/GetOneSeries/" + id)
-                .then(responce => {
-                    commit("setId", responce.data.id)
-                    commit("setTitle", responce.data.title)
-                    commit("setPlot", responce.data.plot)
-                    commit("setYear", responce.data.year)
-                    commit("setDuration", responce.data.duration)
-                    commit("setCountries", responce.data.seriesCountriesList)
-                    commit("setGenres", responce.data.seriesGenreList)
-                    commit("setBudget", responce.data.budget)
-                    commit("setGrossWorldwide", responce.data.grossWorldwide)
-                    commit("setDirector", responce.data.directorList)
-                    commit("setWriter", responce.data.writersList)
-                    commit("setTopActors", responce.data.topActorsList)
-                    commit("setPoster", responce.data.poster)
-                    commit("setRatingKoda", responce.data.kodalibRating)
-                    commit("setKinopoiskRating", responce.data.kinopoiskRating)
-                    commit("setThumbnailUrl", responce.data.thumbnailUrl)
-                    commit("setYoutubeTrailer", responce.data.youtubeTrailer)
-                    commit("setActors", responce.data.actorsList)
-                    commit("setSeason", responce.data.seasonViewModels)
-                    commit("setCountSeason", responce.data.countSeasons)
-                    commit("setCountEpisodes", responce.data.countEpisodes)
+        async getSerialApi({commit}, id) {
+            await axios.get("http://5.44.46.158/api/series/" + id)
+                .then(response => {
+                    console.log(response.data.data.voiceovers)
+                    commit("setId", response.data.data.id)
+                    commit("setTitle", response.data.data.title)
+                    commit("setPlot", response.data.data.plot)
+                    commit("setYear", response.data.data.year)
+                    commit("setDuration", response.data.data.duration)
+                    commit("setCountries", response.data.data.countries)
+                    commit("setGenres", response.data.data.genres)
+                    commit("setDirectors", response.data.data.directors)
+                    commit("setWriters", response.data.data.writers)
+                    commit("setPoster", response.data.data.poster)
+                    commit("setRatingKoda", response.data.data.kodalibRating)
+                    commit("setKinopoiskRating", response.data.data.kinopoiskRating)
+                    commit("setYoutubeTrailer", response.data.data.youtubeTrailer)
+                    commit("setActors", response.data.data.actors)
+                    commit("setVoiceover", response.data.data.voiceovers)
                 })
-                .catch(error => {
-                    console.log(error.response.status)
-                })
-        }
+        },
+        async getSeriesApi({ commit }, { page, country, genre, year, title }) {
+            try {
+                let url = `http://5.44.46.158/api/series?PageSize=16&PageNumber=${page}`;
+                if (country) {
+                    url += `&Country=${country}`;
+                }
+                if (genre) {
+                    url += `&Genre=${genre}`;
+                }
+                if (year) {
+                    url += `&Year=${year}`;
+                }
+                if(title){
+                    url += `&Title=${title}`;
+                }
+                const response = await axios.get(url);
+                console.log(url)
+                commit("setCurrentPage", response.data.data.currentPage);
+                commit("setTotalPages", response.data.data.totalPages);
+                commit("setFilms", response.data.data.items);
+            } catch (error) {
+                commit("setFilms", []);
+            }
+        },
 
     }
 

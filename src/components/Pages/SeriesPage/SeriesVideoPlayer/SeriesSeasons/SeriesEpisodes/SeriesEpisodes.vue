@@ -1,6 +1,6 @@
 <template>
   <div class="episode" @mouseover="textEpisode='Смотреть'" @mouseleave="textEpisode=episode.numberEpisode">
-    <a :href="'/series/'+seriesId+'/season/'+seasonId+'/episode/'+episode.numberEpisode">
+    <a :href="'/series/'+seriesId+'/season/'+seasonId+'/episode/'+episode.numberEpisode+'/voiceover/'+voiceoverId">
       <img :src="episode.image" class="img-episode" >
       <button class="button-episode">
         <span class="info-text-episode"> {{ textEpisode }} </span>
@@ -23,6 +23,9 @@ export default {
     },
     seasonId:{
       type: String
+    },
+    voiceoverId:{
+      type: String
     }
   },
   setup(props){
@@ -37,11 +40,11 @@ export default {
 
 <style scoped>
 .img-episode {
-  width: 300px;
-  height: 170px;
+  width: 100%;
+  height: 100%;
   object-position: center center;
   object-fit: cover;
-  border: 1px solid #4e3883;
+  box-shadow: 0 0 5px #ffddcc;
   border-radius: 10px;
   transition: all 0.3s ease;
 }
@@ -55,14 +58,14 @@ export default {
   position: relative;
   display: inline-block;
   width: 100%;
-  transition: scale 0.3s ease;
+  transition: all 0.3s ease;
   border-radius: 10px;
   background: #1B132E;
 }
 
 .episode:hover{
   scale: 107%;
-  transition: scale 0.4s ease;
+  transition: all 0.4s ease;
   cursor: pointer;
 }
 
@@ -107,6 +110,30 @@ export default {
   color: #ffddcc;
 }
 
+@media (max-width: 1340px) {
+  .info-text-episode {
+    font-size: 14px;
+  }
+  .episode:hover .info-text-episode{
+    font-size: 16px;
+  }
+  .episode:hover .button-episode{
+    left: 25%;
+    bottom: 35%;
+  }
+}
 
+@media (max-width: 752px){
+  .info-text-episode {
+    font-size: 10px;
+  }
+  .episode:hover .info-text-episode{
+    font-size: 14px;
+  }
+  .episode:hover .button-episode{
+    left: 20%;
+    bottom: 30%;
+  }
+}
 
 </style>

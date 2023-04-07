@@ -1,7 +1,7 @@
 <template>
-  <carousel :settings="settings" :breakpoints="breakpoints">
-    <slide v-for="(poster) in films" :key="poster.id">
-        <item-carousel :id="poster"/>
+  <carousel :settings="settings" :breakpoints="breakpoints" :wrap-around="true">
+    <slide v-for="(film) in films" :key="film.id">
+        <item-carousel :poster="film" :typeFilm="type"/>
     </slide>
 
     <template #addons>
@@ -18,7 +18,12 @@ import ItemCarousel from "@/components/Pages/MainPage/ListFilm/CarouselFilms/Ite
 export default {
   name: 'carousel-film',
   props:{
-    films:[]
+    films:{
+      type: Array
+    },
+    type:{
+      type: String
+    }
   },
   components: {
     ItemCarousel,
@@ -33,7 +38,7 @@ export default {
     settings: {
       itemsToShow: 1,
       snapAlign: 'center',
-      mouseDrag: false,
+      mouseDrag: true,
     },
     // breakpoints are mobile first
     // any settings not specified will fallback to the carousel settings
@@ -49,7 +54,7 @@ export default {
         snapAlign: 'start',
       },
       1200: {
-        itemsToShow: 6,
+        itemsToShow: 5,
         snapAlign: 'start',
       },
     },

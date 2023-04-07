@@ -1,22 +1,25 @@
 <template>
   <div class="bg">
-    <img src="@/assets/img/bg.png" class="bg-img">
     <div class="container">
-      <top-films-from-site class="section-main"/>
-      <top-films-koda class="section-main"/>
-      <top-comedy class="section-main"/>
+      <new-episodes />
+      <new-series />
+      <new-films />
+      <top-series />
+      <top-films />
     </div>
   </div>
 </template>
 
 <script>
-import TopFilmsFromSite from "@/components/Pages/MainPage/ListFilm/TopFilmsFromSite";
-import TopFilmsKoda from "@/components/Pages/MainPage/ListFilm/TopKoda";
-import TopComedy from "@/components/Pages/MainPage/ListFilm/TopComedy";
+import NewEpisodes from "@/components/Pages/MainPage/New/NewEpisodes";
+import NewSeries from "@/components/Pages/MainPage/New/NewSeries";
+import NewFilms from "@/components/Pages/MainPage/New/NewFilms";
+import TopSeries from "@/components/Pages/MainPage/Top/TopSeries";
+import TopFilms from "@/components/Pages/MainPage/Top/TopFilms";
 
 export default {
   name: "main-page",
-  components: {TopComedy, TopFilmsKoda, TopFilmsFromSite},
+  components: {TopFilms, TopSeries, NewFilms, NewSeries, NewEpisodes},
 }
 </script>
 

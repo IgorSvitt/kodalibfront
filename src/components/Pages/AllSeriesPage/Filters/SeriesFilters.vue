@@ -3,6 +3,7 @@
     <input type="text" v-model="state.title" placeholder="Поиск" class="search-input">
   </div>
   <div class="filter-container">
+
     <div>
       <select v-model="state.selectedCountry">
         <option disabled value="" class="filter-item">Страна</option>
@@ -33,17 +34,18 @@
 <script>
 import {computed, onMounted, reactive} from 'vue';
 import {useStore} from "vuex";
+import {useRoute} from "vue-router";
 
 export default {
-  name: 'FiltersFilms',
   setup() {
     const store = useStore()
+    const route = useRoute();
     const state = reactive({
       selectedCountry: '',
       selectedGenre: '',
       year: '',
       years: [],
-      title: "",
+      title: ""
     });
 
     for (let i = 2010; i <= 2023; i++) {
@@ -51,19 +53,19 @@ export default {
     }
 
     const applyFilters = async () => {
-      store.commit('films/setSelectedCountry', state.selectedCountry);
-      store.commit('films/setSelectedGenre', state.selectedGenre);
-      store.commit('films/setSelectedYear', state.year);
-      store.commit('films/setSelectedTitle', state.title);
-      store.commit('films/setFilms', []); // очищаем список фильмов
-      await store.dispatch('films/getFilmsApi', { page: 1, country: state.selectedCountry, genre: state.selectedGenre, year: state.year, title: state.title });
+      store.commit('series/setSelectedCountry', state.selectedCountry);
+      store.commit('series/setSelectedGenre', state.selectedGenre);
+      store.commit('series/setSelectedYear', state.year);
+      store.commit('series/setSelectedTitle', state.title);
+      store.commit('series/setFilms', []); // очищаем список фильмов
+      await store.dispatch('series/getSeriesApi', { page: 1, country: state.selectedCountry, genre: state.selectedGenre, year: state.year, title: state.title });
     };
 
     const resetFilters = async () => {
       state.selectedCountry = '';
       state.selectedGenre = '';
       state.year = '';
-      state.title = "";
+      state.title = '';
       await applyFilters();
     };
 
@@ -71,6 +73,9 @@ export default {
     const countries = computed(() => store.getters['country/countryNames']);
 
     onMounted(async () => {
+      const title = route.query.q;
+      console.log(title)
+      store.commit('series/setSelectedTitle', title);
       await store.dispatch('genres/getGenresApi');
       await store.dispatch('country/getCountriesApi');
     });
@@ -89,6 +94,7 @@ export default {
 
 
 <style scoped>
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -121,9 +127,11 @@ input {outline:none;}
   color: #efefef;
 }
 
+
 select,
 .btn-apply,
-.btn-reset{
+.btn-reset
+{
   padding: 0 20px;
   width: 196px;
   height: 40px;
@@ -145,7 +153,7 @@ select:focus {
 }
 
 select:hover {
-  box-shadow: 0 0 20px #4e3883;
+  box-shadow: 0 0 20px #;
   cursor: pointer;
   transition: all .4s ease;
 }

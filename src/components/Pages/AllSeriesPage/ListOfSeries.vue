@@ -1,21 +1,19 @@
 <template>
   <div>
-    <div>
-      <ul class="hover-effect-scale">
-        <li v-for="film in films" :key="film.id" class="film">
-          <img :src="film.poster" alt="">
-          <div>
-            <h3>{{ film.title }}</h3>
-            <a :href="'/film/'+ film.id">Смотреть</a>
-          </div>
-        </li>
-      </ul>
-      <div v-if="showNoFilms">
-        <div class="no-films">Фильмы не найдены</div>
-      </div>
-      <div v-if="showLoader && films.length !== 0" class="loader-container">
-        <div class="loader"></div>
-      </div>
+    <ul class="hover-effect-scale">
+      <li v-for="film in films" :key="film.id" class="film">
+        <img :src="film.poster" alt="">
+        <div>
+          <h3>{{ film.title }}</h3>
+          <a :href="'/series/'+ film.id">Смотреть</a>
+        </div>
+      </li>
+    </ul>
+    <div v-if="showLoader && films.length !== 0" class="loader-container">
+      <div class="loader"></div>
+    </div>
+    <div v-if="showNoFilms">
+      <div class="no-films">Дорамы не найдены</div>
     </div>
     <div ref="loadMoreTrigger"></div>
   </div>
@@ -24,10 +22,12 @@
 <script>
 import {ref, computed, onMounted, watch} from 'vue';
 import {useStore} from 'vuex';
+import {useRouter} from "vue-router";
 
 export default {
   setup() {
     const store = useStore();
+    const router = useRouter();
 
     const isLoading = ref(false);
     const isFetching = ref(false);
@@ -37,44 +37,47 @@ export default {
       if (isFetching.value) return;
       isFetching.value = true;
       isLoading.value = true;
-      const {selectedCountry, selectedGenre, year, title} = store.state.films;
-      await store.dispatch("films/getFilmsApi", {page, country: selectedCountry, genre: selectedGenre, year, title});
+      const {selectedCountry, selectedGenre, year, title} = store.state.series;
+      await store.dispatch("series/getSeriesApi", {page, country: selectedCountry, genre: selectedGenre, year, title});
       isLoading.value = false;
       isFetching.value = false;
       isFilmsLoaded.value = true; // переключаем флаг после загрузки фильмов
-      store.commit('films/setPage', page);
+      store.commit('series/setPage', page);
     };
 
     const loadMoreTrigger = ref(null);
 
+
     const resetAndLoadFilms = async () => {
-      store.commit('films/resetFilms');
-      await loadFilms(); // Дождаться окончания загрузки первой страницы
-      // create an IntersectionObserver and load more films when element is in view
+      store.commit('series/resetFilms');
+
+      await loadFilms();
       const observer = new IntersectionObserver((entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
-          loadFilms(store.state.films.page + 1);
+          loadFilms(store.state.series.page + 1);
         }
       });
       observer.observe(loadMoreTrigger.value);
+
+      // remove query from URL
+      await router.replace({query: {}});
     };
 
     onMounted(() => {
-      // load films from API if there are none in the store
-      if (store.state.films.films.length === 0) {
+      if (store.state.series.films.length === 0) {
         resetAndLoadFilms();
       }
     });
 
-    watch(() => store.state.films.selectedCountry, resetAndLoadFilms);
-    watch(() => store.state.films.selectedGenre, resetAndLoadFilms);
-    watch(() => store.state.films.year, resetAndLoadFilms);
-    watch(() => store.state.films.title, resetAndLoadFilms);
+    watch(() => store.state.series.selectedCountry, resetAndLoadFilms);
+    watch(() => store.state.series.selectedGenre, resetAndLoadFilms);
+    watch(() => store.state.series.year, resetAndLoadFilms);
+    watch(() => store.state.series.title, resetAndLoadFilms);
 
     const films = computed(() => {
       const filmsSet = new Set();
-      const filmsArr = store.state.films.films.filter((film) => {
+      const filmsArr = store.state.series.films.filter((film) => {
         if (filmsSet.has(film.id)) {
           return false;
         } else {
@@ -86,12 +89,12 @@ export default {
     });
 
     const showLoader = computed(() => {
-      const {currentPage, totalPages} = store.state.films;
+      const {currentPage, totalPages} = store.state.series;
       return !isLoading.value && currentPage < totalPages;
     });
 
     const showNoFilms = computed(() => {
-      const {films} = store.state.films;
+      const {films} = store.state.series;
       return isFilmsLoaded.value && films.length === 0; // показываем сообщение только если фильмы загружены и их нет
     });
 

@@ -7,18 +7,17 @@
         </button>
         <div class="menu-dropdown" :class="{ 'menu-open': isMenuOpen }">
           <a href="/" class="menu-item">Главная</a>
-          <a href="#" class="menu-item">Дорамы</a>
+          <a href="/series" class="menu-item">Дорамы</a>
           <a href="/films" class="menu-item">Фильмы</a>
         </div>
         <a href="/" class="title-kodalib"> KODALIB </a>
         <div class="menu-kodalib">
-          <a href="#" class="dramas">Дорамы</a>
+          <a href="/series" class="dramas">Дорамы</a>
           <a href="/films" class="films">Фильмы</a>
         </div>
 
-        <form action="" class="search-bar">
-          <input type="text" placeholder="Поиск" name="q" v-model="query" class="small"/>
-          <input type="text" placeholder="Дорамы, фильмы, ..." name="q" v-model="query" class="large"/>
+        <form action="/series" class="search-bar">
+          <input type="text" placeholder="Поиск..." name="q" v-model="query"/>
           <button type="submit" class="search-btn">
             <img src="@/assets/NavbarImage/search.svg" class="search-img"/>
           </button>
@@ -37,6 +36,7 @@ export default {
 
     const isMenuOpen = ref(false);
     const query = ref("");
+    const querySmall = ref("");
 
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value;
@@ -45,7 +45,8 @@ export default {
     return {
       isMenuOpen,
       toggleMenu,
-      query
+      query,
+      querySmall
     };
   },
 };
@@ -231,14 +232,11 @@ input.small{
     border: none;
   }
 
-  input.large{
-    display: none;
-  }
-
-  input.small{
+  input{
     display: inline-block;
     width: 100px;
   }
+
 
   .menu-kodalib {
     display: none;

@@ -31,7 +31,7 @@ export default {
 
       const config = ({
         method: "post",
-        url: "https://localhost:7248/api/films/films",
+        url: "http://5.44.46.158/api/films/films",
         data: dataFilms.value,
       })
       console.log(config)
@@ -81,14 +81,21 @@ export default {
           film.value.kinopoiskRating = films.value[i].material_data.kinopoisk_rating
           film.value.voiceover.push({"name": films.value[i].translation.title, "link": films.value[i].link})
 
-          axios.get(`https://api.kinopoisk.dev/movie?token=4R81SJ3-0JM4SZ8-QG3R6DJ-V58CDX9&search=${film.value.kinopoiskId}&field=id`)
-              .then(responce => {
-                for (let j = 0; j < responce.data.videos.trailers.length; j++) {
-                  if (responce.data.videos.trailers[j].site === "youtube") {
-                    film.value.youtubeTrailer = responce.data.videos.trailers[j].url
+          if(film.value.kinopoiskId !== undefined){
+            axios.get(`https://api.kinopoisk.dev/v1/movie/${film.value.kinopoiskId}`,  {
+              headers: {
+                'accept': 'application/json',
+                'X-API-KEY': 'SADHXV0-EXY49EN-NTJYCE4-JVRGGEP'
+              }})
+                .then(responce => {
+                  for (let j = 0; j < responce.data.videos.trailers.length; j++) {
+                    if (responce.data.videos.trailers[j].site === "youtube") {
+                      film.value.youtubeTrailer = responce.data.videos.trailers[j].url
+                    }
                   }
-                }
-              })
+                })
+          }
+
 
           if (films.value[i].material_data.actors !== undefined) {
             for (let j = 0; j < films.value[i].material_data.actors.length; j++) {
@@ -204,23 +211,13 @@ export default {
               "numberSeason": countSeason,
               "episodes": episodes.value
             })
-            countEpisodes = countEpisode + countEpisodes
           }
           serial.value.voiceovers.push({
             "name": series.value[i].translation.title,
             "season": seasons.value,
-            "countEpisodes": countEpisodes,
-            "countSeason": countSeason
+            "countEpisodes": series.value[i].last_episode,
+            "countSeason": series.value[i].last_season
           })
-
-          axios.get(`https://api.kinopoisk.dev/movie?token=CJ2VRM8-T8TM034-PZZH3M8-R37HG5H&search=${serial.value.kinopoiskId}&field=id`)
-              .then(responce => {
-                for (let j = 0; j < responce.data.videos.trailers.length; j++) {
-                  if (responce.data.videos.trailers[j].site === "youtube") {
-                    serial.value.youtubeTrailer = responce.data.videos.trailers[j].url
-                  }
-                }
-              })
 
           if (series.value[i].material_data.actors !== undefined) {
             for (let j = 0; j < series.value[i].material_data.actors.length; j++) {

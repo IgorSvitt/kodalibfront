@@ -1,31 +1,37 @@
 <template>
-<div>
   <section>
-    <title-series-information :seriesInformation="seriesInformation"/>
+    <title-series-information :series-information="seriesInformation"/>
   </section>
-<!--  <section class="sections">-->
-<!--    <div class="left-section">-->
-<!--      <left-film-information :filmMedia="seriesInformation"  />-->
-<!--    </div>-->
-<!--    <div class="center-section">-->
-<!--      <center-film-information :filmInformation="seriesInformation" />-->
-<!--    </div>-->
-<!--    <div class="right-section">-->
-<!--      <right-film-information :actors="seriesInformation.actors"/>-->
-<!--    </div>-->
-<!--  </section>-->
+  <section class="sections">
+    <div class="left-section">
+      <left-series-information :series-media="seriesInformation"/>
+    </div>
+    <div class="center-section">
+      <center-series-information :series-information="seriesInformation"/>
+    </div>
+    <div class="right-section">
+      <right-series-informetion :actors="seriesInformation.actors" />
+    </div>
+
+  </section>
   <hr>
-</div>
 </template>
 
 <script>
-import TitleSeriesInformation from "@/components/Pages/SeriesPage/SeriesInformation/TitleSeriesInformation";
+import TitleSeriesInformation
+  from "@/components/Pages/SeriesPage/SeriesInformation/TitleSeriesInformation/TitleSeriesInformation";
+import LeftSeriesInformation from "@/components/Pages/SeriesPage/SeriesInformation/Section/LeftSeriesInformation";
+import RightSeriesInformetion from "@/components/Pages/SeriesPage/SeriesInformation/Section/RightSeriesInformetion";
+import CenterSeriesInformation from "@/components/Pages/SeriesPage/SeriesInformation/Section/CenterSeriesInformation";
 export default {
-  name: "SeriesInformation",
-  components: {TitleSeriesInformation},
+  name: "FilmInformation",
+  components: {
+    CenterSeriesInformation,
+    RightSeriesInformetion, LeftSeriesInformation, TitleSeriesInformation},
   props:{
-    seriesInformation:{
-      type: Object
+    seriesInformation: {
+      type: Object,
+      required: true,
     }
   }
 }

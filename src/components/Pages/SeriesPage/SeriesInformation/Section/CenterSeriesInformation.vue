@@ -1,29 +1,29 @@
 <template>
   <div>
     <div class="genres">
-      <div class="genre" v-for="(genre, index) in filmInformation.genres" :key="index">
+      <div class="genre" v-for="(genre, index) in seriesInformation.genres" :key="index">
         {{ genre }}
       </div>
     </div>
 
     <div class="plot">
-      {{ filmInformation.plot }}
+      {{ seriesInformation.plot }}
     </div>
     <div class="people">
       <div class="person-title">
-        <div>
+        <div v-show="seriesInformation.director.length !== 0">
           Режиссер
         </div>
-        <div>
+        <div v-show="seriesInformation.writer.length !== 0">
           Сценарист
         </div>
       </div>
       <div class="person-name">
         <div>
-          {{filmInformation.directors.join(", ")}}
+          {{seriesInformation.director.join(", ")}}
         </div>
         <div>
-          {{filmInformation.writers.join(", ")}}
+          {{seriesInformation.writer.join(", ")}}
         </div>
       </div>
     </div>
@@ -32,9 +32,8 @@
 
 <script>
 export default {
-  name: "CenterFilmInformation",
   props: {
-    filmInformation: {
+    seriesInformation: {
       type: Object
     }
   },

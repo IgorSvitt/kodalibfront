@@ -1,7 +1,7 @@
 <template>
   <carousel :settings="settings" :breakpoints="breakpoints">
     <slide v-for="(episode) in sortedEpisodes" :key="episode.id">
-      <div class="carousel-img" @click="$router.push('/series/'+route.params.id+'/season/'+route.params.season_id+'/episode/'+episode.numberEpisode)">
+      <div class="carousel-img" @click="$router.push('/series/'+route.params.id+'/season/'+route.params.season_id+'/episode/'+episode.numberEpisode+'/voiceover/'+route.params.voiceover_id)">
         <img :src="episode.image" class="img-episode">
         <p>
           <span class="episode-number">{{episode.numberEpisode}} серия</span>
@@ -22,7 +22,10 @@ import {useRoute} from "vue-router";
 export default {
   name: 'CarouselEpisodes',
   props:{
-    episodes:[]
+    episodes:[],
+    currentSlide:{
+      type: String
+    }
   },
   components: {
     Carousel,
@@ -58,13 +61,13 @@ export default {
     // any settings not specified will fallback to the carousel settings
     breakpoints: {
       // 700px and up
-      700: {
+      752: {
         itemsToShow: 2,
         snapAlign: 'center',
       },
       // 1024 and up
       1024: {
-        itemsToShow: 5,
+        itemsToShow: 4,
         snapAlign: 'center',
       },
     },
@@ -98,4 +101,12 @@ export default {
   color: #ffddcc;
   font-size: 20px;
 }
+
+@media (max-width: 1340px) {
+  .img-episode {
+    max-width: 200px;
+    height: 140px;
+  }
+}
+
 </style>

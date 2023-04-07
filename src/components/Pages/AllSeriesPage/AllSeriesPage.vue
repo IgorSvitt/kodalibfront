@@ -1,14 +1,14 @@
 <template>
   <div class="container">
     <div class="title">
-      Фильмы
+      Дорамы
     </div>
     <div class="films-filter">
       <div class="filters">
-        <filters/>
+        <series-filters />
       </div>
       <div class="films">
-        <list-of-films/>
+        <list-of-series />
       </div>
     </div>
   </div>
@@ -16,14 +16,13 @@
 </template>
 
 <script>
-import ListOfFilms from "@/components/Pages/FilmsPage/ListFilms/ListOfFilms";
-import Filters from "@/components/Pages/FilmsPage/Filters/Filters";
+import SeriesFilters from "@/components/Pages/AllSeriesPage/Filters/SeriesFilters";
+import ListOfSeries from "@/components/Pages/AllSeriesPage/ListOfSeries";
 
 export default {
-  name: "FilmsPage",
-  components: {Filters, ListOfFilms},
+  components: {ListOfSeries, SeriesFilters},
   setup(){
-    document.title = "Фильмы";
+      document.title = "Дорамы";
   }
 }
 </script>

@@ -18,7 +18,7 @@
             Рейтинг КП
           </div>
           <div class="rating-number">
-            <span class="active">{{ seriesInformation.ratingKinopoisk }}</span><span class="passive">/10</span>
+            <span class="active">{{ seriesInformation.kinopoiskRating }}</span><span class="passive">/10</span>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    </div>
+  </div>
   <div class="film-rating-small">
     <div class="rating">
       <div class="rating-text">
@@ -47,7 +47,7 @@
         Рейтинг КП
       </div>
       <div class="rating-number">
-        <span class="active">{{ seriesInformation.ratingKinopoisk }}</span><span class="passive">/10</span>
+        <span class="active">{{ seriesInformation.kinopoiskRating }}</span><span class="passive">/10</span>
       </div>
     </div>
   </div>
@@ -55,7 +55,6 @@
 
 <script>
 export default {
-  name: "TitleSeriesInformation",
   props: {
     seriesInformation: {
       type: Object
@@ -112,7 +111,7 @@ export default {
   color: rgba(255, 255, 255, 0.5);
 }
 
-@media (max-width: 752px) {
+@media (max-width: 1000px) {
   .film-title {
     font-size: 28px;
   }
@@ -120,10 +119,6 @@ export default {
   .all-information{
     margin: 10px 0;
     font-size: 14px;
-  }
-
-  .title-rating {
-    display: block;
   }
 
   .rating {
@@ -144,6 +139,14 @@ export default {
     font-size: 16px;
   }
 
+
+}
+
+@media (max-width: 752px){
+
+  .title-rating {
+    display: block;
+  }
   .film-rating-large {
     display: none;
   }

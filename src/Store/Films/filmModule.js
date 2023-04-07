@@ -27,6 +27,7 @@ export const films = {
         selectedCountry: '',
         selectedGenre: '',
         year: '',
+        title: "",
         currentPage: "",
         totalPages: "",
     }),
@@ -87,6 +88,9 @@ export const films = {
             state.film.ratingKoda = ratingKoda
         },
         setKinopoiskRating(state, kinopoiskRating) {
+            if(kinopoiskRating === undefined){
+                kinopoiskRating = ""
+            }
             state.film.kinopoiskRating = kinopoiskRating
         },
 
@@ -122,6 +126,9 @@ export const films = {
         setSelectedYear(state, year) {
             state.year = year;
         },
+        setSelectedTitle(state, title) {
+            state.title = title;
+        },
         resetFilms(state) {
             state.films = [];
             state.page = 0;
@@ -136,7 +143,7 @@ export const films = {
 
     actions: {
         async getFilmApi({commit}, id) {
-            await axios.get("https://localhost:7248/api/films/" + id)
+            await axios.get("http://5.44.46.158/api/films/" + id)
                 .then(response => {
                     console.log(response.data.data)
                     commit("setId", response.data.data.id)
@@ -156,9 +163,9 @@ export const films = {
                     commit("setVoiceovers", response.data.data.voiceovers)
                 })
         },
-        async getFilmsApi({ commit }, { page, country, genre, year }) {
+        async getFilmsApi({ commit }, { page, country, genre, year, title }) {
             try {
-                let url = `https://localhost:7248/api/films?PageSize=16&PageNumber=${page}`;
+                let url = `http://5.44.46.158/api/films?PageSize=16&PageNumber=${page}`;
                 if (country) {
                     url += `&Country=${country}`;
                 }
@@ -167,6 +174,9 @@ export const films = {
                 }
                 if (year) {
                     url += `&Year=${year}`;
+                }
+                if (title) {
+                    url += `&Title=${title}`;
                 }
                 const response = await axios.get(url);
                 console.log(url)

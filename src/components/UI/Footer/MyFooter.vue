@@ -48,4 +48,14 @@ hr{
   height: 2px;
   background: linear-gradient(90deg, rgba(255,221,204,1) 0%, rgba(239,239,239,1) 100%);
 }
+
+
+@media (max-width: 752px) {
+  .footer-titles{
+    font-size: 16px;
+  }
+  hr{
+    height: 0.02px;
+  }
+}
 </style>
